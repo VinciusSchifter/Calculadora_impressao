@@ -1,15 +1,24 @@
 Projeto de Integração Contínua
 
+
 Descrição
+
 Este projeto implementa uma API em Python/Flask para cálculo de custos de impressão.
+
 O objetivo principal é demonstrar o uso de Integração Contínua (CI) com testes automatizados, análise de código e empacotamento.
 
+
 Execução Local
+
 pip install -r requirements.txt
+
 python -m src.api
+
 python -m pytest --cov=src
 
+
 Pipeline CI/CD
+
 O pipeline automatizado no GitHub Actions executa:
 
 Lint (flake8)
