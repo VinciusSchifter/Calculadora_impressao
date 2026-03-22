@@ -1,0 +1,45 @@
+name: CI Pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Instalar dependências de desenvolvimento
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (flake8)
+        run: flake8 src tests
+
+      - name: Testes unitários e integração
+        run: pytest --cov=src --cov-report=xml
+
+      - name: Verificação de segurança
+        run: bandit -r src
+
+      - name: Build do pacote
+        run: python setup.py sdist bdist_wheel
+
+      - name: Upload artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: pacote-${{ matrix.python-version }}
+          path: dist/
